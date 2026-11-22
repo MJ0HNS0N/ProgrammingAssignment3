@@ -1,4 +1,5 @@
 import argparse
+from copy import copy
 
 class Task:
     def __init__(self, task_name: str, task_deadline: int, task_wcets: list[str], task_frequency: int = 1188) -> None:
@@ -94,9 +95,13 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
         event = False
         for tsk in rm_tasks:
             if t == 0 or t % tsk.deadline == 0:
-                queue.append(tsk)
+                new_job = copy(tsk)
+                new_job.remain = new_job.get_wcet()
+                queue.append(new_job)
                 event = True
-            queue = sorted(queue, key=lambda x: x.deadline) # sort queue by deadline
+
+            queue.sort(key=lambda x: x.deadline) # sort queue by deadline (lowest first)
+            
             if len(queue) and task != queue[0]:
                 task = queue[0] # get task with highest priority (lowest deadline)
                 event = True
