@@ -1,13 +1,79 @@
 import argparse
 
-parser = argparse.ArgumentParser()
+class Task:
+    def __init__(self, task_name: str, task_deadline: int, task_wcets: list[str]):
+        self.name: str = task_name
+        self.deadline: int = task_deadline
+        self.wcets: list[int] = []
+        for wcet in task_wcets:
+            self.wcets.append(int(wcet))
+    
+    def get_wcet_at(self, frequency: int) -> int:
+        """
+        Get worst case execution time based on frequency
+        """
+        
+        index: int = 0
+        
+        match(frequency):
+            case 1188: index = 0
+            case 918: index = 1
+            case 648: index = 2
+            case 384: index = 3
 
-parser.add_argument("input_file_name")
-parser.add_argument("scheduling", choices=["EDF", "RM"])
-parser.add_argument("energy_efficient", nargs="?", choices=["EE"], default=None)
+        return self.wcets[index]
 
-args = parser.parse_args()
+    def __str__(self) -> str:
+        return f"Name: {self.name}\nDeadline: {self.deadline}\nWCETs: {self.wcets}"
+        
 
-print("Input file:", args.input_file_name)
-print("Scheduling:", args.scheduling)
-print("Energy efficient:", args.energy_efficient is not None)
+def parse_cli() -> argparse.Namespace:
+    """
+    Parses command line arguments using argparse library
+    """
+    
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("infile")
+    parser.add_argument("schedule", choices=["EDF", "RM"])
+    parser.add_argument("ee", nargs="?", choices=["EE"], default=None) # EE is optional
+
+    return parser.parse_args()
+    
+
+def main():
+    # Parse command line arguments
+    args = parse_cli()
+
+    print("Input file:", args.infile)
+    print("Scheduling:", args.schedule)
+    print("Energy efficient:", args.ee is not None)
+    
+    # Parse input file
+    table: list = []
+    with open(args.infile, "r") as f:
+        for line in f:
+            table.append(line.split())
+    
+    # Parse first row
+    num_tasks: int = int(table[0][0])
+    t_exec: int = int(table[0][1])
+    p_cpu: list[int] = [] # p_cpu goes power at [ 1188 Mhz, 918 Mhz, 648 Mhz, 384 Mhz ]
+    for pwr in table[0][2:]:
+        p_cpu.append(int(pwr))
+    
+    # Parse tasks (row 2+)
+    tasks: list[Task] = []
+    for t in table[1:]:
+        tasks.append(Task(t[0], int(t[1]), t[2:]))
+        
+    print("Table:\n", table)
+    print(f"num_tasks = {num_tasks}")
+    print(f"t_exec = {t_exec}")
+    print(f"p_cpu = {p_cpu}")
+    print("Tasks:\n")
+    for task in tasks:
+        print(task)
+
+if __name__ == "__main__":
+    main()
