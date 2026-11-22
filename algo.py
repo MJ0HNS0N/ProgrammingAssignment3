@@ -1,7 +1,11 @@
 import argparse
 
 class Task:
-    def __init__(self, task_name: str, task_deadline: int, task_wcets: list[str]):
+    def __init__(self, task_name: str, task_deadline: int, task_wcets: list[str]) -> None:
+        """
+        Class constructor for Task object
+        """
+        
         self.name: str = task_name
         self.deadline: int = task_deadline
         self.wcets: list[int] = []
@@ -24,6 +28,9 @@ class Task:
         return self.wcets[index]
 
     def __str__(self) -> str:
+        """
+        Return a string representation of the task
+        """
         return f"Name: {self.name}\nDeadline: {self.deadline}\nWCETs: {self.wcets}"
         
 
@@ -39,9 +46,36 @@ def parse_cli() -> argparse.Namespace:
     parser.add_argument("ee", nargs="?", choices=["EE"], default=None) # EE is optional
 
     return parser.parse_args()
-    
 
-def main():
+def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
+    """
+    Run Earliest Deadline First scheduling algorithm
+    """
+    pass
+
+def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
+    """
+    Run Earliest Deadline First scheduling algorithm with energy efficiency
+    """
+    pass
+
+def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
+    """
+    Run Rate Monotonic scheduling algorithm
+    """
+    pass
+
+def run_RM_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
+    """
+    Run Rate Monotonic scheduling algorithm with energy efficiency
+    """
+    pass
+
+def main() -> int:
+    """
+    Main execution
+    """
+    
     # Parse command line arguments
     args = parse_cli()
 
@@ -74,6 +108,8 @@ def main():
     print("Tasks:\n")
     for task in tasks:
         print(task)
+    
+    return 0
 
 if __name__ == "__main__":
     main()
