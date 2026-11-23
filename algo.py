@@ -56,7 +56,7 @@ def parse_cli() -> argparse.Namespace:
 
     return parser.parse_args()
 
-def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> list[list]:
+def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     """
     Run Earliest Deadline First scheduling algorithm
     """
@@ -138,13 +138,16 @@ def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> list[list]:
 
         time += execution_time
 
-    print (f"Total idle time: {time_idle}")
-    print (f"Total energy consumption: {total_energy}")
-    print (f"Total execution time: {time}")
-    print (f"Percentage of idle time: {time_idle/time*100}%")
-    return schedule
+    for entry in schedule[0]:
+        print(f"{entry[0]:.3f}  {entry[1]} {entry[2]}    {entry[3]:.3f}  {entry[4]:.3f}J")
+    
+    print(f"Total energy: {total_energy:.3f}J")
+    print(f"Percentage idle: {(time_idle/t_exec):.2f}%")
+    print(f"Total execution time: {t_exec}s")
+    
+    pass
 
-def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> tuple[list[list], float]:
+def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     """
     Run Earliest Deadline First scheduling with energy-efficient
     frequency selection.
@@ -247,7 +250,12 @@ def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> tuple[list[l
         frequency_index = FREQUENCY_OPTIONS.index(frequency)
         energy = (execution_time * p_cpu[frequency_index] * 0.001)
 
-        schedule[0].append([time, job.name, frequency, execution_time, energy])
+        if schedule[0] and schedule[0][-1][1] == job.name and schedule[0][-1][2] == frequency:
+        # If the last scheduled task is the same as the current task, merge the time segments
+            schedule[0][-1][3] += execution_time
+            schedule[0][-1][4] += execution_time*p_cpu[frequency_index]*0.001
+        else:
+            schedule[0].append([time, job.name, frequency, execution_time, energy])
 
         total_energy += energy
 
@@ -261,7 +269,7 @@ def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> tuple[list[l
             if completion_time > job.deadline + 1:
                 print(
                     f"Task {job.name} missed its deadline "
-                    f"at time {completion_time} with deadline {job.deadline + 1} and remaining fraction {job.remaining_fraction}."
+                    f"at time {completion_time} with deadline {job.deadline + 1}."
                 )
 
         time += execution_time
@@ -270,11 +278,14 @@ def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> tuple[list[l
         if task_finished:
             queue.pop(task_to_run)
 
-    print (f"Total idle time: {time_idle}")
-    print (f"Total energy consumption: {total_energy}")
-    print (f"Total execution time: {time}")
-    print (f"Percentage of idle time: {time_idle/time*100}%")
-    return schedule, total_energy
+    for entry in schedule[0]:
+        print(f"{entry[0]:.3f}  {entry[1]} {entry[2]}    {entry[3]:.3f}  {entry[4]:.3f}J")
+
+    print(f"Total energy: {total_energy:.3f}J")
+    print(f"Percentage idle: {(time_idle/t_exec):.2f}%")
+    print(f"Total execution time: {t_exec}s")
+
+    pass
 
 
 def find_optimal_frequency(
@@ -410,12 +421,9 @@ def main() -> int:
     print("Tasks:\n")
     for task in tasks:
         print(task)
-
-    schedule = run_EDF_EE(tasks, p_cpu, t_exec)
-
-    print("\nSchedule:\n")
-    for entry in schedule[0]:
-        print(entry)
+    
+    run_EDF_EE(tasks, p_cpu, t_exec)
+   
     return 0
 
 if __name__ == "__main__":
