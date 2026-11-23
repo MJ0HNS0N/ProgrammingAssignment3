@@ -52,39 +52,109 @@ def parse_cli() -> argparse.Namespace:
 
     return parser.parse_args()
 
-def min_remaining(tasks: list[Task]) -> Task:
-    """
-    Get the task with the lowest remaining time
-    """
-    low_task: Task = tasks[0]
-    
-    for task in tasks:
-        if task.remain < low_task.remain:
-            low_task = task
-    
-    return low_task
-
-def max_remaining(tasks: list[Task]) -> Task:
-    """
-    Get the task with the highest deadline
-    """
-    high_task: Task = tasks[0]
-    
-    for task in tasks:
-        if task.remain > high_task.remain:
-            high_task = task
-    
-    return high_task
-
 def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     """
-    Run Rate Monotonic scheduling algorithm
+    Rate Monotonic scheduling at 1188 MHz,
+    followed by segment and energy calculation.
     """
-    schedule: list[Task | None] = []
+
+    rm_tasks = sorted(tasks, key=lambda x: x.deadline)
+    queue: list[Task] = []
+    task: Task | None = None
+
+    frequency = 1188
+    active_power = p_cpu[0]
+    idle_power = p_cpu[4]
+
+    # one entry per time unit
+    schedule: list[tuple[str, str, int]] = []
+
+    for t in range(t_exec):
+        # Release new jobs
+        for original_task in rm_tasks:
+            if t == 0 or t % original_task.deadline == 0:
+                new_job = copy(original_task)
+                new_job.frequency = frequency
+                new_job.remain = new_job.get_wcet()
+                queue.append(new_job)
+
+        queue.sort(key=lambda x: x.deadline) # sort lowest deadline first
+
+        # update task to the one with the earliest deadline
+        if queue:
+            if task is None or task not in queue or task.deadline > queue[0].deadline: # just being careful here
+                task = queue[0]
+
+        # log task name, frequency, and power consumption
+        if task is None:
+            schedule.append(("IDLE", "IDLE", idle_power))
+        else:
+            schedule.append((task.name, str(frequency), active_power))
+
+        # execute task for 1 time unit
+        if task is not None:
+            task.remain -= 1
+
+            # job has completed
+            if task.remain == 0:
+                if task in queue:
+                    queue.remove(task)
+
+                # select next task
+                queue.sort(key=lambda x: x.deadline)
+                task = queue[0] if queue else None
+
+    # combine consecutive identical schedule entries
+    start_time = 0
+    total_energy = 0.0
+    idle_time = 0
+
+    for index in range(1, len(schedule) + 1):
+        segment_finished = (
+            index == len(schedule)
+            or schedule[index] != schedule[start_time]
+        )
+
+        if segment_finished:
+            name, freq, power = schedule[start_time]
+            duration = index - start_time
+            energy = power * duration / 1000
+
+            if name == "IDLE":
+                print(f"{start_time} IDLE IDLE {duration} {energy:.3f}J")
+                idle_time += duration
+            else:
+                print(f"{start_time} {name} {freq} {duration} {energy:.3f}J")
+
+            total_energy += energy
+            start_time = index
+
+    idle_percentage = idle_time / t_exec * 100
+
+    # log to console
+    print(f"Total energy: {total_energy:.3f}J")
+    print(f"Percentage idle: {idle_percentage:.2f}%")
+    print(f"Total execution time: {t_exec}s")
+        
+def choose_frequency(task, current_time):
+    time_left = task.deadline - current_time
+
+    for frequency in [384, 648, 918, 1188]:
+        wcet = task.get_wcet(frequency)
+
+        if wcet <= time_left:
+            return frequency
+
+    return 1188
+
+def run_RM_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
+    """
+    Run Rate Monotonic scheduling algorithm with energy efficiency
+    """
+    frequencies: list[int] = [384, 648, 918, 1188]
     rm_tasks: list[Task] = sorted(tasks, key=lambda x: x.deadline) # sort tasks by deadline
     queue: list[Task] = []
-    task: Task = rm_tasks[0]
-    schedule.append(task)
+    task: Task | None = rm_tasks[0]
     event: bool = False
     
     for tsk in rm_tasks:
@@ -106,7 +176,7 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
                 task = queue[0] # get task with highest priority (lowest deadline)
                 event = True
         
-        if task.remain > 1:
+        if task and task.remain > 1:
             task.remain -= 1
         elif len(queue) > 0:
             task.remain = 0
@@ -116,13 +186,7 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
         
         if t == 0 or event:
             print(f"t = {t}, task = {task}, queue = {[tsk.name for tsk in queue]}")
-        
-
-def run_RM_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
-    """
-    Run Rate Monotonic scheduling algorithm with energy efficiency
-    """
-    pass
+    
 
 def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     """
