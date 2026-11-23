@@ -15,6 +15,10 @@ class Task:
         
         self.frequency: int = task_frequency # denotes current frequency of task
         self.remain: int = self.get_wcet() # denotes remaining time for task to complete
+        
+        self.release_time: int = 0
+        self.absolute_deadline: int = task_deadline
+        self.miss_reported: bool = False # save if there was a deadline miss
     
     def get_wcet(self, frequency: int | None = None) -> int:
         """
@@ -74,9 +78,21 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
         for original_task in rm_tasks:
             if t == 0 or t % original_task.deadline == 0:
                 new_job = copy(original_task)
+
+                new_job.release_time = t
+                new_job.absolute_deadline = t + original_task.deadline
+                new_job.miss_reported = False
+
                 new_job.frequency = frequency
                 new_job.remain = new_job.get_wcet()
+
                 queue.append(new_job)
+        
+        # check for deadline misses (I keep getting one for input1)
+        for queued_job in queue:
+            if (t >= queued_job.absolute_deadline and queued_job.remain > 0 and not queued_job.miss_reported):
+                print(f"DEADLINE MISS: {queued_job.name} released at {queued_job.release_time}, deadline {queued_job.absolute_deadline}, remaining {queued_job.remain}")
+                queued_job.miss_reported = True
 
         queue.sort(key=lambda x: x.deadline) # sort lowest deadline first
 
