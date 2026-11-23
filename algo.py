@@ -1,7 +1,5 @@
 import argparse
 
-from anyio import current_time
-
 from copy import deepcopy
 
 FREQUENCY_OPTIONS = [1188, 918, 648, 384]
@@ -288,17 +286,11 @@ def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     pass
 
 
-def find_optimal_frequency(
-    queue: list[Task],
-    task_index: int,
-    time: float,
-    p_cpu: list[int]
-) -> int:
+def find_optimal_frequency(queue: list[Task], task_index: int, time: float, p_cpu: list[int]) -> int:
     """
     Choose the feasible frequency with the lowest energy.
 
     """
-
     ready_task_indexes = [
         i for i, job in enumerate(queue)
         if (
