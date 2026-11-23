@@ -163,10 +163,7 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     idle_time = 0
 
     for index in range(1, len(schedule) + 1):
-        segment_finished = (
-            index == len(schedule)
-            or schedule[index] != schedule[start_time]
-        )
+        segment_finished = (index == len(schedule) or schedule[index] != schedule[start_time])
 
         if segment_finished:
             name, freq, power = schedule[start_time]
