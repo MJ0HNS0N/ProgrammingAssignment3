@@ -186,7 +186,7 @@ def run_RM(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     # log to console
     print(f"Total energy: {total_energy:.3f}J")
     print(f"Percentage idle: {idle_percentage:.2f}%")
-    print(f"Total execution time: {t_exec}s")
+    print(f"Total execution time: {t_exec}ms")
 
 def run_RM_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     """
@@ -277,7 +277,7 @@ def run_RM_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
 
     print(f"Total energy: {total_energy:.3f}J")
     print(f"Percentage idle: {idle_percentage:.2f}%")
-    print(f"Total execution time: {t_exec}s")
+    print(f"Total execution time: {t_exec}ms")
     
 
 def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
@@ -367,7 +367,7 @@ def run_EDF(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
     
     print(f"Total energy: {total_energy:.3f}J")
     print(f"Percentage idle: {(time_idle/t_exec*100):.2f}%")
-    print(f"Total execution time: {t_exec}s")
+    print(f"Total execution time: {t_exec}ms")
     
     pass
 
@@ -507,7 +507,7 @@ def run_EDF_EE(tasks: list[Task], p_cpu: list[int], t_exec: int) -> None:
 
     print(f"Total energy: {total_energy:.3f}J")
     print(f"Percentage idle: {(time_idle/t_exec*100):.2f}%")
-    print(f"Total execution time: {t_exec}s")
+    print(f"Total execution time: {t_exec}ms")
 
     pass
 

@@ -27,7 +27,7 @@ Running python script...
 935.000  IDLE IDLE    65.000  5.460J
 Total energy: 462.075J
 Percentage idle: 30.00%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input2.txt EDF
 File = input2.txt, Scheduling = EDF 
@@ -54,7 +54,7 @@ Running python script...
 960.000  w2 1188    40.000  25.000J
 Total energy: 433.943J
 Percentage idle: 35.20%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input1.txt EDF EE
 File = input1.txt, Scheduling = EDF EE
@@ -79,7 +79,7 @@ Task w5 missed its deadline at time 608.3513513513514 with deadline 601.
 956.329  w4 1188    43.671  27.294J
 Total energy: 472.677J
 Percentage idle: 0.00%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input2.txt EDF EE
 File = input2.txt, Scheduling = EDF EE
@@ -99,4 +99,4 @@ Running python script...
 978.692  w1 1188    21.308  13.317J
 Total energy: 343.361J
 Percentage idle: 0.00%
-Total execution time: 1000s
+Total execution time: 1000ms

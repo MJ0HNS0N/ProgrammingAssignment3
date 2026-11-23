@@ -30,7 +30,7 @@ DEADLINE MISS: w1 released at 0, deadline 520, remaining 18
 955 IDLE IDLE 45 3.780J
 Total energy: 591.999J
 Percentage idle: 6.10%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input2.txt RM
 File = input2.txt, Scheduling = RM 
@@ -57,7 +57,7 @@ Running python script...
 960 w2 1188 40 25.000J
 Total energy: 491.373J
 Percentage idle: 24.70%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input1.txt RM EE
 File = input1.txt, Scheduling = RM EE
@@ -86,7 +86,7 @@ DEADLINE MISS: w1 released at 0, deadline 520, remaining 89
 992 w3 918 8 3.576J
 Total energy: 412.280J
 Percentage idle: 0.00%
-Total execution time: 1000s
+Total execution time: 1000ms
 
 ./run_algo.sh input2.txt RM EE
 File = input2.txt, Scheduling = RM EE
@@ -107,4 +107,4 @@ DEADLINE MISS: w4 released at 450, deadline 900, remaining 104
 900 w5 384 100 21.200J
 Total energy: 212.000J
 Percentage idle: 0.00%
-Total execution time: 1000s
+Total execution time: 1000ms
