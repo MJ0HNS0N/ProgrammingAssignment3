@@ -1,0 +1,110 @@
+./run_algo.sh input1.txt RM
+File = input1.txt, Scheduling = RM 
+Running python script...
+DEADLINE MISS: w1 released at 0, deadline 520, remaining 18
+0 w4 1188 57 35.625J
+57 w2 1188 40 25.000J
+97 w5 1188 35 21.875J
+132 w3 1188 68 42.500J
+200 w4 1188 57 35.625J
+257 w2 1188 40 25.000J
+297 w3 1188 3 1.875J
+300 w5 1188 35 21.875J
+335 w3 1188 33 20.625J
+368 w1 1188 32 20.000J
+400 w4 1188 57 35.625J
+457 w2 1188 40 25.000J
+497 w1 1188 3 1.875J
+500 w3 1188 100 62.500J
+600 w4 1188 57 35.625J
+657 w5 1188 3 1.875J
+660 w2 1188 40 25.000J
+700 w5 1188 32 20.000J
+732 w3 1188 4 2.500J
+736 w1 1188 64 40.000J
+800 w4 1188 57 35.625J
+857 w1 1188 7 4.375J
+864 IDLE IDLE 16 1.344J
+880 w2 1188 40 25.000J
+920 w5 1188 35 21.875J
+955 IDLE IDLE 45 3.780J
+Total energy: 591.999J
+Percentage idle: 6.10%
+Total execution time: 1000s
+
+./run_algo.sh input2.txt RM
+File = input2.txt, Scheduling = RM 
+Running python script...
+0 w5 1188 35 21.875J
+35 w2 1188 40 25.000J
+75 w4 1188 57 35.625J
+132 w3 1188 104 65.000J
+236 w1 1188 53 33.125J
+289 IDLE IDLE 11 0.924J
+300 w5 1188 35 21.875J
+335 w2 1188 40 25.000J
+375 IDLE IDLE 75 6.300J
+450 w4 1188 57 35.625J
+507 w3 1188 93 58.125J
+600 w5 1188 35 21.875J
+635 w3 1188 5 3.125J
+640 w2 1188 40 25.000J
+680 w3 1188 6 3.750J
+686 w1 1188 53 33.125J
+739 IDLE IDLE 161 13.524J
+900 w5 1188 35 21.875J
+935 w4 1188 25 15.625J
+960 w2 1188 40 25.000J
+Total energy: 491.373J
+Percentage idle: 24.70%
+Total execution time: 1000s
+
+./run_algo.sh input1.txt RM EE
+File = input1.txt, Scheduling = RM EE
+Running python script...
+DEADLINE MISS: w3 released at 0, deadline 500, remaining 106
+DEADLINE MISS: w1 released at 0, deadline 520, remaining 89
+0 w4 918 74 33.078J
+74 w2 918 50 22.350J
+124 w5 648 62 19.034J
+186 w3 918 14 6.258J
+200 w4 918 74 33.078J
+274 w2 918 50 22.350J
+324 w5 648 62 19.034J
+386 w3 918 14 6.258J
+400 w4 918 74 33.078J
+474 w2 918 50 22.350J
+524 w3 918 76 33.972J
+600 w4 918 74 33.078J
+674 w2 918 50 22.350J
+724 w5 648 62 19.034J
+786 w3 918 14 6.258J
+800 w4 918 74 33.078J
+874 w3 918 6 2.682J
+880 w2 918 50 22.350J
+930 w5 648 62 19.034J
+992 w3 918 8 3.576J
+Total energy: 412.280J
+Percentage idle: 0.00%
+Total execution time: 1000s
+
+./run_algo.sh input2.txt RM EE
+File = input2.txt, Scheduling = RM EE
+Running python script...
+DEADLINE MISS: w4 released at 0, deadline 450, remaining 93
+DEADLINE MISS: w3 released at 0, deadline 500, remaining 184
+DEADLINE MISS: w1 released at 0, deadline 520, remaining 141
+DEADLINE MISS: w4 released at 450, deadline 900, remaining 104
+0 w5 384 104 22.048J
+104 w2 384 114 24.168J
+218 w4 384 82 17.384J
+300 w5 384 104 22.048J
+404 w2 384 114 24.168J
+518 w4 384 82 17.384J
+600 w5 384 104 22.048J
+704 w2 384 114 24.168J
+818 w4 384 82 17.384J
+900 w5 384 100 21.200J
+Total energy: 212.000J
+Percentage idle: 0.00%
+Total execution time: 1000s
